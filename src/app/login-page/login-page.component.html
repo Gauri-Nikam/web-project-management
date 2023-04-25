@@ -1,0 +1,19 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="container">
+    <label for="uname"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username"  class="form-control" id="login-v1" formControlName="login" required [(ngModel)]="loginCredentials.userName">
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" class="form-control" id="password-v1" formControlName="password" required [(ngModel)]="loginCredentials.password">
+
+    <button type="submit" class="btn btn-success">Login</button>
+    <!-- <label>
+      <input type="checkbox" checked="checked" name="remember"> Remember me
+    </label> -->
+  </div>
+
+  <!-- <div class="container" style="background-color:#f1f1f1">
+    <button type="button" class="cancelbtn">Cancel</button>
+    <span class="psw">Forgot <a href="#">password?</a></span>
+  </div> -->
+</form>

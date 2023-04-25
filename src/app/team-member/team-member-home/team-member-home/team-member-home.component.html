@@ -1,0 +1,64 @@
+<!-- header and search -->
+<div class="d-flex">
+    <app-nav-bar [heading]=heading></app-nav-bar>
+    <form class="input-group mb-3 w-25 topMargin ms-auto" [formGroup]="idForm" (ngSubmit)="onSubmit()">
+        <input class="form-control" placeholder="Enter Id" id="Id" name="Id" formControlName="Id">
+        <span class="input-group-text pointer" type="submit" (click)="onSubmit()">
+            <i class="fa fa-search text-secondary" aria-hidden="true"></i></span>
+        <span *ngIf="idForm.controls['Id'].invalid && isSubmitted" class="text-danger">Enter a five digit numeric
+            id</span>
+    </form>
+</div>
+
+<!-- member details -->
+<div class="d-sm-flex mb-2" *ngIf="showDetails">
+    <div class="me-3"><b>Id : </b>{{searchedMember.memberId}}</div>
+    <div class="ms-sm-3 me-3"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;<b>Name : </b>{{searchedMember.memberName}}</div>
+    <div class="ms-sm-3 me-3"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;<b>Project Start Date : </b>{{projectStartDate | date : 'dd-MMM-yyyy'}}</div>
+    <div class="ms-sm-3 me-3"><i class="fa fa-calendar" aria-hidden="true"></i>&nbsp;<b>Project End Date : </b>{{projectEndDate | date : 'dd-MMM-yyyy'}}</div>
+    <div class="ms-sm-3"><i class="fa fa-pie-chart" aria-hidden="true"></i>&nbsp;<b>Allocation : </b>{{searchedMember.allocationPercentage}}%</div>
+</div>
+<div class = "mt-3 " *ngIf="!showDetails && searchedMember.memberName == undefined && isSubmitted">
+    <span class= "p-2" style="background-color: var(--theme-color);">Team member with Id {{searchedMember.memberId}} not found.</span>
+</div>
+
+<!-- task table -->
+<div *ngIf="showTasks">
+    <div class="tableHeader row gx-4 mx-0 mb-2 py-1 d-none d-sm-flex">
+        <div class ="col-sm-5"><b>Task Name</b></div>
+        <div class="col-sm-2"><b>Task Start Date</b></div>
+        <div class="col-sm-2"><b>Task End Date</b></div>
+        <div class="col-sm-3 alignRight"><b>Action</b></div>
+    </div>
+    <div *ngFor="let item of taskDetails;let i = index;">
+        <div class="accordion row gx-4 mx-0" [ngClass]="{'accBorderShow': !item.isActive}">
+            <div class ="col-sm-5"><b class="d-inline d-sm-none">Task Name: </b>{{item.taskName}}</div>
+            <div class="col-sm-2"><b class="d-inline d-sm-none">Task start date: </b>{{item.startDate | date : 'dd-MMM-yyyy'}}</div>
+            <div class="col-sm-2"><b class="d-inline d-sm-none">Task end date: </b>{{item.endDate | date : 'dd-MMM-yyyy'}}</div>
+            <div class="col-sm-3 alignRight">
+                <a *ngIf = "!item.isActive" class= "pointer ms-auto" (click)="toggleAccordian($event, i)">View details</a>
+                <a *ngIf = "item.isActive" class= "pointer" (click)="toggleAccordian($event, i)">Hide details</a></div>
+        </div>
+        <div class="panel" hide="!item.isActive" [ngClass]="{'panelBorder': item.isActive}">
+            <p class="my-1"><b>Deliverables: </b>
+                {{item.deliverables}}</p>
+        </div>
+    </div>
+</div>
+<div class = "mt-3 " *ngIf="showDetails && tasksCount == 0">
+    <span class= "p-2" style="background-color: var(--theme-color);">You are not authrorised or no tasks assigned.</span>
+</div>
+
+<!-- pagination -->
+<nav aria-label="..." *ngIf="showTasks && tasksCount > count">
+    <ul class="pagination pagination-sm justify-content-center">
+      <li class="page-item pointer" (click)= "getPaginatedDataOnPrevious(currentPage)">
+        <span class="page-link" >Previous</span>
+      </li>
+      <li class="page-item pointer" *ngFor = "let page of paginationArray" [ngClass]="{'active': page.active}"(click)= "getPaginatedData(page)">
+          <a class="page-link">{{page.pageNum}}</a></li>
+      <li class="page-item pointer" (click)="getPaginatedDataOnNext(currentPage)">
+        <a class="page-link" >Next</a>
+      </li>
+    </ul>
+  </nav>
